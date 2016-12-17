@@ -16,6 +16,7 @@
 
 package com.apm4all.hadoop;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,10 +111,9 @@ public class JobCounterAdapterTest {
                 .prettyPrint()
                 .build();
 
-        ObjectNode objectNode = adapter.asObjectNode();
+        JsonNode jsonNode = adapter.asJsonNode();
 
-        assertEquals(59888915216L, objectNode
-                .path(JobCountersAdapter.DEFAULT_COUNTERS_NAME)
+        assertEquals(59888915216L, jsonNode
                 .path(Group.CASCADING_FLOW_STEPCOUNTERS.toStringReplaceDots())
                 .path(Category.MAP.toString())
                 .path(Name.TUPLES_READ.toString())
@@ -121,14 +121,12 @@ public class JobCounterAdapterTest {
 
         // test com.apm4all.hadoop.mushroomFactory TOTAL counters are present
         final String MUSHROOM_FACTORY_GROUP = "com.apm4all.hadoop.mushroomFactory";
-        assertEquals(10L, objectNode
-                .path(JobCountersAdapter.DEFAULT_COUNTERS_NAME)
+        assertEquals(10L, jsonNode
                 .path(JobCounters.groupToStringReplaceDots(MUSHROOM_FACTORY_GROUP))
                 .path(Category.TOTAL.toString())
                 .path("STANDARD_MUSHROOMS")
                 .asLong());
-        assertEquals(5L, objectNode
-                .path(JobCountersAdapter.DEFAULT_COUNTERS_NAME)
+        assertEquals(5L, jsonNode
                 .path(JobCounters.groupToStringReplaceDots(MUSHROOM_FACTORY_GROUP))
                 .path(Category.TOTAL.toString())
                 .path("MAGIC_MUSHROOMS")
@@ -136,21 +134,19 @@ public class JobCounterAdapterTest {
 
         // test com.apm4all.someOther.beanFactory TOTAL counters are present
         final String BEAN_FACTORY_GROUP = "com.apm4all.someOther.beanFactory";
-        assertEquals(2L, objectNode
-                .path(JobCountersAdapter.DEFAULT_COUNTERS_NAME)
+        assertEquals(2L, jsonNode
                 .path(JobCounters.groupToStringReplaceDots(BEAN_FACTORY_GROUP))
                 .path(Category.TOTAL.toString())
                 .path("STANDARD_BEANS")
                 .asLong());
-        assertEquals(1L, objectNode
-                .path(JobCountersAdapter.DEFAULT_COUNTERS_NAME)
+        assertEquals(1L, jsonNode
                 .path(JobCounters.groupToStringReplaceDots(BEAN_FACTORY_GROUP))
                 .path(Category.TOTAL.toString())
                 .path("JELLY_BEANS")
                 .asLong());
 
-//        System.out.println("jobCountersAdapter standardOutput:");
-//        System.out.print(adapter.asString());
+        System.out.println("### Job Counters (adapted) ###");
+        System.out.print(adapter.asString());
     }
 
     @Test

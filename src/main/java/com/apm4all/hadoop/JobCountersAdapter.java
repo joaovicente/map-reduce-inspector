@@ -18,10 +18,13 @@ package com.apm4all.hadoop;
 
 import com.apm4all.hadoop.JobCounters.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -29,7 +32,6 @@ import java.util.regex.Pattern;
 public class JobCountersAdapter {
     private final ObjectNode rootNode;
     private boolean prettyPrinted;
-    static public final String DEFAULT_COUNTERS_NAME = "counters";
 
     public static class Builder {
         // Required parameter
@@ -53,7 +55,6 @@ public class JobCountersAdapter {
 
         public Builder with(JobCounters.Group group, JobCounters.Category category, JobCounters.Name name)   {
             rootNode
-                    .with(DEFAULT_COUNTERS_NAME)
                     .with(group.toStringReplaceDots())
                     .with(category.toString())
                     .put(name.toString(), jobCounters.getCounterValue(group, category, name));
@@ -74,7 +75,6 @@ public class JobCountersAdapter {
                     for (String counterName : counterNames) {
                         // Iterate through TOTAL children appending each one found
                         rootNode
-                                .with(DEFAULT_COUNTERS_NAME)
                                 .with(JobCounters.groupToStringReplaceDots(groupName))
                                 .with(Category.TOTAL.toString())
                                 .put(counterName, jobCounters.getCounterValue(groupName, categoryName, counterName));
@@ -97,6 +97,16 @@ public class JobCountersAdapter {
 
     public ObjectNode asObjectNode()    {
         return rootNode;
+    }
+
+    public JsonNode asJsonNode()    {
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = new ObjectMapper().readTree(rootNode.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonNode;
     }
 
     public String asString()    {

@@ -1,0 +1,28 @@
+{
+  "job": {
+    "submitTime": 1480046730687,
+    "startTime": 1480046735503,
+    "finishTime": 1480057717790,
+    "id": "job_1478805790803_8364",
+    "name": "[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)",
+    "queue": "root.default",
+    "user": "apm4all",
+    "state": "SUCCEEDED",
+    "mapsTotal": 8713,
+    "mapsCompleted": 8713,
+    "reducesTotal": 368,
+    "reducesCompleted": 368,
+    "uberized": false,
+    "diagnostics": "",
+    "avgMapTime": 713761,
+    "avgReduceTime": 2345178,
+    "avgShuffleTime": 546189,
+    "avgMergeTime": 7965,
+    "failedReduceAttempts": 0,
+    "killedReduceAttempts": 0,
+    "successfulReduceAttempts": 368,
+    "failedMapAttempts": 2,
+    "killedMapAttempts": 0,
+    "successfulMapAttempts": 8713
+  }
+}

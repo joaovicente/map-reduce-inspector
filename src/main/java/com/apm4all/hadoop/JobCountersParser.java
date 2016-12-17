@@ -34,18 +34,8 @@ public class JobCountersParser {
         JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
 
         for (JsonNode counterGroups : jsonNode.path("jobCounters").path("counterGroup")) {
-//            System.out.println("--- "+ counterGroups.toString());
             String groupName = counterGroups.path("counterGroupName").textValue();
-//            System.out.println("\n\t "+ groupName);
             for (JsonNode counter : counterGroups.path("counter")) {
-//                System.out.println("\t\tname: " + counter.path("name").textValue());
-//                System.out.println("\t\ttotalCounterValue: " + counter.get("totalCounterValue"));
-//                System.out.println("\t\tmapCounterValue: " + counter.get("mapCounterValue"));
-//                System.out.println("\t\treduceCounterValue:" + counter.get("reduceCounterValue"));
-
-//                System.out.println("\t\t" + counter.path("name").textValue() + "\t\t\t\t(\"" + counter.path("name").textValue()  + "\"),");
-//                NUM_FAILED_MAPS         ("NUM_FAILED_MAPS"),
-
                 jobCounters.addCounterValue(
                         groupName, "MAP", counter.path("name").textValue(),
                         counter.get("mapCounterValue").asLong());
@@ -57,7 +47,6 @@ public class JobCountersParser {
                         counter.get("totalCounterValue").asLong());
             }
         }
-//        System.out.println(jsonString);
         return jobCounters;
     }
 }
