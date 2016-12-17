@@ -1,0 +1,196 @@
+@startuml
+
+enum JobCounter #FFFFFF {
+    NUM_FAILED_MAPS
+    TOTAL_LAUNCHED_MAPS
+    TOTAL_LAUNCHED_REDUCES
+}
+
+enum JobCounterCategory #FFFFFF {
+    MAP
+    REDUCE
+    TOTAL
+}
+
+enum JobCounterGroup #FFFFFF {
+    ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER
+    ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER
+    ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER
+    SHUFFLE_ERRORS
+    CASCADING_FLOW_SLICECOUNTERS
+    CASCADING_FLOW_STEPCOUNTERS
+    ORG_APACHE_HADOOP_MAPREDUCE_LIB_INPUT_FILEINPUTFORMATCOUNTER
+    ORG_APACHE_HADOOP_MAPREDUCE_LIB_OUTPUT_FILEOUTPUTFORMATCOUNTER
+}
+
+enum JobConfigurationItem #FFFFFF {
+    MAPREDUCE_INPUT_FILEINPUTFORMAT_SPLIT_MINSIZE
+    MAPREDUCE_MAP_MEMORY_MB
+    MAPREDUCE_TASK_IO_SORT_MB
+    MAPREDUCE_JOB_REDUCES
+    MAPREDUCE_JOB_REDUCE_SLOWSTART_COMPLETEDMAPS
+    HBASE_CLIENT_SCANNER_CACHING
+}
+
+enum JobSummaryItem #FFFFFF {
+    SUBMIT_TIME
+    START_TIME
+    FINISH_TIME
+    ID
+    USER
+    NAME
+}
+
+class Job #FFFFFF {
+    Job(JobHistoryRestClient)
+    Job(String jobId)
+    long getCounterValue(JobCounter, JobCounterCategory, JobCounterGroup)
+    long getCounterValue(String counter, String category, String group)
+    Object getSummaryItem(JobSummaryItem)
+    Object getConfigurationItem(JobConfigurationItem)
+}
+
+class JobSummary #FFFFFF {
+    Object getSummaryItem(JobSummaryItem)
+}
+
+class JobConfiguration #FFFFFF {
+    Object getConfigurationItem(JobConfigurationItem)
+}
+
+class JobCounters #FFFFFF {
+    long getCounterValue(JobCounter, JobCounterCategory, JobCounterGroup)
+    long getCounterValue(String counter, String category, String group)
+}
+
+class JobTasks #FFFFFF {
+}
+
+
+class JobSummaryParser #FFFFFF {
+    JobSummaryParser(String json)
+    JobSummary parse()
+}
+
+class JobConfigurationParser #FFFFFF {
+    JobConfigurationParser(String json)
+    JobCounters parse()
+}
+
+class JobCountersParser #FF8800 {
+    JobCountersParser(String json)
+    JobCounters parse()
+}
+
+class JobTasksParser #FFFFFF {
+    JobTasksParser(String json)
+    JobTasks parse()
+}
+
+interface JobSummaryCollector #FFFFFF {
+    String getJsonString()
+}
+
+class JobSummaryRestCollector #FFFFFF {
+    JobSummaryRestCollector(JobHistoryRestClient)
+    String getJsonString()
+}
+
+class JobSummaryFileCollector #FFFFFF {
+    JobSummaryFileCollector(String jobId)
+    String getJsonString()
+}
+
+interface JobConfigurationCollector #FFFFFF {
+    String getJsonString()
+}
+
+class JobConfigurationRestCollector #FFFFFF {
+    JobConfigurationRestCollector(JobHistoryRestClient)
+    String getJsonString()
+}
+
+class JobConfigurationFileCollector #FFFFFF {
+    JobConfigurationFileCollector(String jobId)
+    String getJsonString()
+}
+
+
+interface JobCountersCollector {
+    String getJsonString()
+}
+
+class JobCountersRestCollector #FFFFFF {
+    JobCountersRestCollector(JobHistoryRestClient)
+    String getJsonString()
+}
+
+class JobCountersFileCollector {
+    JobCountersFileCollector(String jobId)
+    String getJsonString()
+}
+
+
+interface JobTasksCollector #FFFFFF {
+    String getJsonString()
+}
+
+class JobTasksRestCollector #FFFFFF {
+    JobTasksRestCollector(JobHistoryRestClient)
+    String getJsonString()
+}
+
+class JobTasksFileCollector #FFFFFF {
+    JobTasksFileCollector(String jobId)
+    String getJsonString()
+}
+
+class JobHistoryRestClient #FFFFFF {
+    JobHistoryRestClient(String serverHostname, int port, String jobId)
+    String getJobSummary()
+    String getJobConfiguration()
+    String getCounters()
+    String getTasks()
+}
+
+
+class FileReader {
+    FileReader(String pathToFile)
+    String getContent)
+}
+
+Job *-down- JobSummary
+Job *-down- JobConfiguration
+Job *-down- JobCounters
+Job *-down- JobTasks
+
+JobSummary -down- JobSummaryParser
+JobConfiguration -down- JobConfigurationParser
+JobCounters -down- JobCountersParser
+JobTasks -down- JobTasksParser
+
+JobSummaryParser -down- JobSummaryCollector
+JobSummaryCollector <|-down- JobSummaryRestCollector
+'JobSummaryCollector <|-down-  JobSummaryFileCollector
+JobHistoryRestClient <-down-  JobSummaryRestCollector
+FileReader <-down-  JobSummaryFileCollector
+
+JobConfigurationParser -down- JobConfigurationCollector
+JobConfigurationCollector <|-down- JobConfigurationRestCollector
+'JobConfigurationCollector <|-down-  JobConfigurationFileCollector
+JobHistoryRestClient <-down-  JobConfigurationRestCollector
+FileReader <-down-  JobConfigurationFileCollector
+
+JobCountersParser -down- JobCountersCollector
+JobCountersCollector <|-down- JobCountersRestCollector
+'JobCountersCollector <|-down-  JobCountersFileCollector
+JobHistoryRestClient <-down-  JobCountersRestCollector
+FileReader <-down-  JobCountersFileCollector
+
+JobTasksParser -down- JobTasksCollector
+JobTasksCollector <|-down- JobTasksRestCollector
+'JobTasksCollector <|-down-  JobTasksFileCollector
+JobHistoryRestClient <-down-  JobTasksRestCollector
+FileReader <-down-  JobTasksFileCollector
+
+@enduml
