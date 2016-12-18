@@ -18,7 +18,6 @@ package com.apm4all.hadoop;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.tools.classfile.Synthetic_attribute;
 
 import java.io.IOException;
 
