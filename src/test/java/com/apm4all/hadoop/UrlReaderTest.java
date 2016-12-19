@@ -25,9 +25,6 @@ public class UrlReaderTest {
     @Test
     public void readValidUrl() {
         // TODO: Refactor with a mock
-        UrlReader urlReader = new UrlReader(
-                "http://dbpldassn01.us.dnb.com:19888/ws/v1/history/mapreduce/jobs/job_1478805790803_8364");
-        System.out.println(urlReader.read());
     }
 
     //TODO: Using Mockito to:
