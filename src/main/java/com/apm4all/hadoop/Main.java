@@ -15,9 +15,134 @@
  */
 
 package com.apm4all.hadoop;
+import com.apm4all.hadoop.JobCounters.*;
 
 public class Main {
+
+    public void printAdaptedJob(String jobHistoryUrl, String jobId)   {
+        Job job = new Job(jobHistoryUrl, jobId);
+        JobSummaryAdapter summaryAdapter = new JobSummaryAdapter.Builder(job.getSummary())
+                .build();
+
+        JobCountersAdapter countersAdapter = new JobCountersAdapter.Builder(job.getCounters())
+                .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.MAP, Name.TUPLES_READ)
+                .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.REDUCE, Name.TUPLES_WRITTEN)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.MAP, Name.TUPLES_READ)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.MAP, Name.TUPLES_WRITTEN)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.REDUCE, Name.TUPLES_READ)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.REDUCE, Name.TUPLES_WRITTEN)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.TOTAL, Name.TUPLES_READ)
+                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.TOTAL, Name.TUPLES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.MAP, Name.FILE_BYTES_READ)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.MAP, Name.FILE_BYTES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.MAP, Name.HDFS_BYTES_READ)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.REDUCE, Name.FILE_BYTES_READ)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.REDUCE, Name.FILE_BYTES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.REDUCE, Name.HDFS_BYTES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.TOTAL, Name.FILE_BYTES_READ)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.TOTAL, Name.FILE_BYTES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.TOTAL, Name.HDFS_BYTES_READ)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.TOTAL, Name.HDFS_BYTES_WRITTEN)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.MAP_INPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.MAP_OUTPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.FAILED_SHUFFLE)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.CPU_MILLISECONDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.PHYSICAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.VIRTUAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.COMMITTED_HEAP_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.GC_TIME_MILLIS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.SPILLED_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.SHUFFLED_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.REDUCE_INPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.REDUCE_OUTPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.MERGED_MAP_OUTPUTS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.FAILED_SHUFFLE)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.CPU_MILLISECONDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.PHYSICAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.VIRTUAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.COMMITTED_HEAP_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.GC_TIME_MILLIS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.SPILLED_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.REDUCE_INPUT_GROUPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.REDUCE_INPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.REDUCE, Name.REDUCE_OUTPUT_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.CPU_MILLISECONDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.PHYSICAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.VIRTUAL_MEMORY_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.COMMITTED_HEAP_BYTES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.GC_TIME_MILLIS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.TOTAL, Name.SPILLED_RECORDS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.DATA_LOCAL_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.TOTAL_LAUNCHED_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.TOTAL_LAUNCHED_REDUCES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.RACK_LOCAL_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.MILLIS_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.TOTAL_LAUNCHED_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.MB_MILLIS_MAPS)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.VCORES_MILLIS_MAPS )
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.MILLIS_REDUCES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.TOTAL_LAUNCHED_REDUCES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.MB_MILLIS_REDUCES)
+                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.VCORES_MILLIS_REDUCES)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.BAD_ID)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.CONNECTION)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.IO_ERROR)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.WRONG_LENGTH)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.WRONG_MAP)
+                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.WRONG_REDUCE)
+                // Capture any counter of groups matching "com.apm4all.hadoop.*" or "com.apm4all.someOther.*"
+                .withTotalsOfGroupsMatching(
+                        "com\\.apm4all\\.hadoop\\..*" + "|" +
+                        "com\\.apm4all\\.someOther\\..*"
+                )
+                .build();
+
+        JobConfigurationAdapter configurationAdapter = new JobConfigurationAdapter.Builder(job.getConfiguration())
+                .includeKey("mapreduce.input.fileinputformat.split.minsize")
+                .includeKey("mapreduce.map.memory.mb")
+                .includeKey("mapreduce.task.io.sort.mb")
+                .includeKey("mapreduce.job.reduces")
+                .includeKey("mapreduce.job.reduce.slowstart.completedmaps")
+                .includeKey("hbase.client.scanner.caching")
+                .includeKey("hbase.client.prefetch.limit")
+                .includeKey("hbase.client.write.buffer")
+                .includeKey("hbase.regionserver.handler.count")
+                .includeKey("hbase.hregion.memstore.flush.size")
+                .includeKey("mapreduce.reduce.merge.inmem.threshold")
+                .includeKey("mapreduce.reduce.shuffle.input.buffer.percent")
+                .includeKey("mapreduce.reduce.cpu.vcores")
+                .includeKey("mapreduce.map.java.opts")
+                .includeKey("mapreduce.reduce.memory.mb")
+                .includeKey("mapreduce.reduce.java.opts")
+                .includeKey("hbase.client.scanner.max.result.size")
+                .includeKey("mapreduce.reduce.shuffle.memory.limit.percent")
+                .build();
+
+
+        System.out.println(
+                "{"
+                + "\"summary\":" + summaryAdapter.asString() + ","
+                + "\"counters\":" + countersAdapter.asString() + ","
+                + "\"configuration\":" + configurationAdapter.asString()
+                + "}");
+    }
+
+    public void adaptedJobsStdout(String jobHistoryUrl, String jobIdCsv)  {
+        System.out.println("### Adapted job information retrieved from " + jobHistoryUrl
+            + " for " + jobIdCsv);
+        String[] jobIds = jobIdCsv.split(",");
+        for (String job : jobIds)   {
+            printAdaptedJob(jobHistoryUrl, job);
+        }
+    }
+
     public static void main(String[] args) {
-        // write your code here
+        if (args.length == 2)  {
+            new Main().adaptedJobsStdout(args[0], args[1]);
+        }
+        else    {
+            System.out.println("Description: Dumps (adapted) job information to stdout:");
+            System.out.println("Usage: java -jar ./target/map-reduce-inspector.jar <job history url> <jobIdsCsv>");
+        }
     }
 }

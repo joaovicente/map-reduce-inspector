@@ -20,6 +20,8 @@ import org.junit.Test;
 
 import com.apm4all.hadoop.JobCounters.*;
 
+import java.util.ArrayList;
+
 
 public class JobTest {
 
@@ -122,7 +124,6 @@ public class JobTest {
                 .includeKey("mapreduce.reduce.shuffle.memory.limit.percent")
                 .build();
 
-
         System.out.println("\n### summary (adapted) ###");
         System.out.println(summaryAdapter.asString());
         System.out.println("\n### counters (adapted) ###");
@@ -130,5 +131,4 @@ public class JobTest {
         System.out.println("\n### configuration (adapted) ###");
         System.out.println(configurationAdapter.asString());
     }
-
 }

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -54,10 +55,18 @@ public class JobCountersAdapter {
         }
 
         public Builder with(JobCounters.Group group, JobCounters.Category category, JobCounters.Name name)   {
-            rootNode
-                    .with(group.toStringReplaceDots())
-                    .with(category.toString())
-                    .put(name.toString(), jobCounters.getCounterValue(group, category, name));
+
+            try {
+                rootNode
+                        .with(group.toStringReplaceDots())
+                        .with(category.toString())
+                        .put(name.toString(), jobCounters.getCounterValue(group, category, name));
+            } catch (NoSuchElementException e) {
+                // Not all counters will be available for all jobs
+                // e.g. SHUFFLED_MAPS will not be available on jobs which do not require reducers
+                // So, if counters are not available, they will simply not being populated
+            }
+
             return this;
         }
 

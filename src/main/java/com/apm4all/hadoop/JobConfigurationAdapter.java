@@ -68,7 +68,8 @@ public class JobConfigurationAdapter {
         public JobConfigurationAdapter build()   {
             for (String key : jobConfiguration.getKeys()) {
                 if(allow(key)) {
-                    rootNode.put(key, jobConfiguration.get(key));
+                    String keyWithoutDots = key.replaceAll("\\.", ":");
+                    rootNode.put(keyWithoutDots, jobConfiguration.get(key));
                 }
             }
             return new JobConfigurationAdapter(this);

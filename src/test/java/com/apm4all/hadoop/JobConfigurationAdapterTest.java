@@ -60,7 +60,7 @@ public class JobConfigurationAdapterTest {
         JsonNode jsonNode = adapter.asJsonNode();
 
         assertEquals( "268435456", jsonNode
-                .path("hbase.hregion.memstore.flush.size")
+                .path("hbase:hregion:memstore:flush:size")
                 .asText());
 
 //        System.out.println();

@@ -22,8 +22,13 @@ public class Job {
     private JobConfiguration jobConfiguration;
     private JobCounters jobCounters;
 
-    Job(String baseUrl) {
-        // TODO: Actual method which will retrieve data from Job History URLs
+    Job(String jobHistoryUrl, String jobId) {
+        JobSummaryUrlReader summaryReader = new JobSummaryUrlReader(jobHistoryUrl, jobId);
+        parseSummary(summaryReader.getJsonString());
+        JobCountersUrlReader countersReader = new JobCountersUrlReader(jobHistoryUrl, jobId);
+        parseCounters(countersReader.getJsonString());
+        JobConfigurationUrlReader configurationReader = new JobConfigurationUrlReader(jobHistoryUrl, jobId);
+        parseConfiguration(configurationReader.getJsonString());
     }
 
     Job()   {
