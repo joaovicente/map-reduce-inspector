@@ -45,8 +45,8 @@ public class JobSummaryAdapterTest {
                 .path("submitTime")
                 .asLong());
 
-        System.out.println("### Job Summary (adapted) ###");
-        System.out.print(adapter.asString());
+//        System.out.println("### Job Summary (adapted) ###");
+//        System.out.print(adapter.asString());
     }
 
     @Test

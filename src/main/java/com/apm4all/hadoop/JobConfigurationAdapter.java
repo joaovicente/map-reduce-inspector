@@ -75,7 +75,7 @@ public class JobConfigurationAdapter {
         }
     }
 
-    private JobConfigurationAdapter(Builder builder) {
+    public JobConfigurationAdapter(Builder builder) {
         rootNode = builder.rootNode;
         prettyPrinted = builder.prettyPrinted;
     }

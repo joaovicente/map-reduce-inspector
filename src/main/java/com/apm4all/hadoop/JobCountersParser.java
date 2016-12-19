@@ -28,24 +28,30 @@ public class JobCountersParser {
         this.jsonString = json;
     }
 
-    public JobCounters parse() throws IOException {
-        JobCounters jobCounters = new JobCounters();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
+    public JobCounters parse() {
+        JobCounters jobCounters = null;
 
-        for (JsonNode counterGroups : jsonNode.path("jobCounters").path("counterGroup")) {
-            String groupName = counterGroups.path("counterGroupName").textValue();
-            for (JsonNode counter : counterGroups.path("counter")) {
-                jobCounters.addCounterValue(
-                        groupName, "MAP", counter.path("name").textValue(),
-                        counter.get("mapCounterValue").asLong());
-                jobCounters.addCounterValue(
-                        groupName, "REDUCE", counter.path("name").textValue(),
-                        counter.get("reduceCounterValue").asLong());
-                jobCounters.addCounterValue(
-                        groupName, "TOTAL", counter.path("name").textValue(),
-                        counter.get("totalCounterValue").asLong());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
+            jobCounters = new JobCounters();
+
+            for (JsonNode counterGroups : jsonNode.path("jobCounters").path("counterGroup")) {
+                String groupName = counterGroups.path("counterGroupName").textValue();
+                for (JsonNode counter : counterGroups.path("counter")) {
+                    jobCounters.addCounterValue(
+                            groupName, "MAP", counter.path("name").textValue(),
+                            counter.get("mapCounterValue").asLong());
+                    jobCounters.addCounterValue(
+                            groupName, "REDUCE", counter.path("name").textValue(),
+                            counter.get("reduceCounterValue").asLong());
+                    jobCounters.addCounterValue(
+                            groupName, "TOTAL", counter.path("name").textValue(),
+                            counter.get("totalCounterValue").asLong());
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return jobCounters;
     }

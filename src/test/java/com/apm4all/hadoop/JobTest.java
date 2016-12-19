@@ -16,29 +16,20 @@
 
 package com.apm4all.hadoop;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.apm4all.hadoop.JobCounters.*;
 
-import static org.junit.Assert.*;
 
-public class JobCounterAdapterTest {
-    JobCounters jobCounters;
-
-    @Before
-    public void setUp() throws Exception {
-        JobCountersFileCollector collector = new JobCountersFileCollector(Constants.TEST_JOB_ID);
-        String jsonString = collector.getJsonString();
-        JobCountersParser jobCountersParser = new JobCountersParser(jsonString);
-        jobCounters = jobCountersParser.parse();
-    }
+public class JobTest {
 
     @Test
-    public void standardUsage() throws Exception {
-        JobCountersAdapter adapter = new JobCountersAdapter.Builder(jobCounters)
+    public void jobAdaptation()  {
+        Job job = new Job();
+        JobSummaryAdapter summaryAdapter = new JobSummaryAdapter.Builder(job.getSummary())
+                .build();
+
+        JobCountersAdapter countersAdapter = new JobCountersAdapter.Builder(job.getCounters())
                 .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.MAP, Name.TUPLES_READ)
                 .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.REDUCE, Name.TUPLES_WRITTEN)
                 .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.MAP, Name.TUPLES_READ)
@@ -106,78 +97,38 @@ public class JobCounterAdapterTest {
                 .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.WRONG_REDUCE)
                 // Capture any counter of groups matching "com.apm4all.hadoop.*" or "com.apm4all.someOther.*"
                 .withTotalsOfGroupsMatching(
-                    "com\\.apm4all\\.hadoop\\..*" + "|" +
-                    "com\\.apm4all\\.someOther\\..*")
-                .prettyPrint()
+                        "com\\.apm4all\\.hadoop\\..*" + "|" +
+                        "com\\.apm4all\\.someOther\\..*")
                 .build();
 
-        JsonNode jsonNode = adapter.asJsonNode();
-
-        assertEquals(59888915216L, jsonNode
-                .path(Group.CASCADING_FLOW_STEPCOUNTERS.toStringReplaceDots())
-                .path(Category.MAP.toString())
-                .path(Name.TUPLES_READ.toString())
-                .asLong());
-
-        // test com.apm4all.hadoop.mushroomFactory TOTAL counters are present
-        final String MUSHROOM_FACTORY_GROUP = "com.apm4all.hadoop.mushroomFactory";
-        assertEquals(10L, jsonNode
-                .path(JobCounters.groupToStringReplaceDots(MUSHROOM_FACTORY_GROUP))
-                .path(Category.TOTAL.toString())
-                .path("STANDARD_MUSHROOMS")
-                .asLong());
-        assertEquals(5L, jsonNode
-                .path(JobCounters.groupToStringReplaceDots(MUSHROOM_FACTORY_GROUP))
-                .path(Category.TOTAL.toString())
-                .path("MAGIC_MUSHROOMS")
-                .asLong());
-
-        // test com.apm4all.someOther.beanFactory TOTAL counters are present
-        final String BEAN_FACTORY_GROUP = "com.apm4all.someOther.beanFactory";
-        assertEquals(2L, jsonNode
-                .path(JobCounters.groupToStringReplaceDots(BEAN_FACTORY_GROUP))
-                .path(Category.TOTAL.toString())
-                .path("STANDARD_BEANS")
-                .asLong());
-        assertEquals(1L, jsonNode
-                .path(JobCounters.groupToStringReplaceDots(BEAN_FACTORY_GROUP))
-                .path(Category.TOTAL.toString())
-                .path("JELLY_BEANS")
-                .asLong());
-
-//        System.out.println("### Job Counters (adapted) ###");
-//        System.out.print(adapter.asString());
-    }
-
-    @Test
-    public void asString_prettyPrinted() throws Exception {
-        JobCountersAdapter adapter = new JobCountersAdapter.Builder(jobCounters)
-                .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.REDUCE, Name.TUPLES_WRITTEN)
-                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.TOTAL, Name.TUPLES_WRITTEN)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.MAP, Name.FILE_BYTES_READ)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.MAP_INPUT_RECORDS)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.DATA_LOCAL_MAPS)
-                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.BAD_ID)
-                .prettyPrint()
+        JobConfigurationAdapter configurationAdapter = new JobConfigurationAdapter.Builder(job.getConfiguration())
+                .includeKey("mapreduce.input.fileinputformat.split.minsize")
+                .includeKey("mapreduce.map.memory.mb")
+                .includeKey("mapreduce.task.io.sort.mb")
+                .includeKey("mapreduce.job.reduces")
+                .includeKey("mapreduce.job.reduce.slowstart.completedmaps")
+                .includeKey("hbase.client.scanner.caching")
+                .includeKey("hbase.client.prefetch.limit")
+                .includeKey("hbase.client.write.buffer")
+                .includeKey("hbase.regionserver.handler.count")
+                .includeKey("hbase.hregion.memstore.flush.size")
+                .includeKey("mapreduce.reduce.merge.inmem.threshold")
+                .includeKey("mapreduce.reduce.shuffle.input.buffer.percent")
+                .includeKey("mapreduce.reduce.cpu.vcores")
+                .includeKey("mapreduce.map.java.opts")
+                .includeKey("mapreduce.reduce.memory.mb")
+                .includeKey("mapreduce.reduce.java.opts")
+                .includeKey("hbase.client.scanner.max.result.size")
+                .includeKey("mapreduce.reduce.shuffle.memory.limit.percent")
                 .build();
 
-        assertNotEquals(0, adapter.asString().length());
-        assertTrue(adapter.asString().toString().contains("\n"));
+
+        System.out.println("\n### summary (adapted) ###");
+        System.out.println(summaryAdapter.asString());
+        System.out.println("\n### counters (adapted) ###");
+        System.out.println(countersAdapter.asString());
+        System.out.println("\n### configuration (adapted) ###");
+        System.out.println(configurationAdapter.asString());
     }
 
-    @Test
-    public void asString_notPrettyPrinted() throws Exception {
-        JobCountersAdapter adapter = new JobCountersAdapter.Builder(jobCounters)
-                .with(Group.CASCADING_FLOW_STEPCOUNTERS, Category.REDUCE, Name.TUPLES_WRITTEN)
-                .with(Group.CASCADING_FLOW_SLICECOUNTERS, Category.TOTAL, Name.TUPLES_WRITTEN)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_FILESYSTEMCOUNTER, Category.MAP, Name.FILE_BYTES_READ)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_TASKCOUNTER, Category.MAP, Name.MAP_INPUT_RECORDS)
-                .with(Group.ORG_APACHE_HADOOP_MAPREDUCE_JOBCOUNTER, Category.TOTAL, Name.DATA_LOCAL_MAPS)
-                .with(Group.SHUFFLE_ERRORS, Category.TOTAL, Name.BAD_ID)
-//                .prettyPrint()
-                .build();
-
-        assertNotEquals(0, adapter.asString().toString().length());
-        assertFalse(adapter.asString().contains("\n"));
-    }
 }

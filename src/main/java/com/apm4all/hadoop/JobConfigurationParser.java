@@ -28,16 +28,22 @@ public class JobConfigurationParser {
         this.jsonString = json;
     }
 
-    public JobConfiguration parse() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
+    public JobConfiguration parse() {
+        JobConfiguration jobConfiguration = null;
 
-        JobConfiguration jobConfiguration = new JobConfiguration();
-        for (JsonNode node : jsonNode.path("conf").path("property"))    {
-            jobConfiguration.add(
-                    node.path("name").asText(),
-                    node.path("value").asText());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
+            jobConfiguration = new JobConfiguration();
+            for (JsonNode node : jsonNode.path("conf").path("property"))    {
+                jobConfiguration.add(
+                        node.path("name").asText(),
+                        node.path("value").asText());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return jobConfiguration;
     }
 }

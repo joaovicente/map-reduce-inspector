@@ -63,9 +63,9 @@ public class JobConfigurationAdapterTest {
                 .path("hbase.hregion.memstore.flush.size")
                 .asText());
 
-        System.out.println();
-        System.out.println("### Job Configuration (adapted) ###");
-        System.out.println(adapter.asString());
+//        System.out.println();
+//        System.out.println("### Job Configuration (adapted) ###");
+//        System.out.println(adapter.asString());
     }
 
     @Test

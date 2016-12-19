@@ -90,7 +90,7 @@ public class JobCountersAdapter {
 
     }
 
-    private JobCountersAdapter(Builder builder) {
+    public JobCountersAdapter(Builder builder) {
         rootNode = builder.rootNode;
         prettyPrinted = builder.prettyPrinted;
     }

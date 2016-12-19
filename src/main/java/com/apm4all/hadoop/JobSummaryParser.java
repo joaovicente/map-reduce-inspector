@@ -28,11 +28,16 @@ public class JobSummaryParser {
         this.jsonString = json;
     }
 
-    public JobSummary parse() throws IOException {
+    public JobSummary parse() {
+        JobSummary jobSummary = null;
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
-
-        JobSummary jobSummary = new JobSummary(jsonNode.path("job"));
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = mapper.readValue(jsonString.getBytes(), JsonNode.class);
+            jobSummary = new JobSummary(jsonNode.path("job"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return jobSummary;
     }
 }
