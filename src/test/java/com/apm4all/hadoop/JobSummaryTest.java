@@ -40,10 +40,10 @@ public class JobSummaryTest {
 
     @Test
     public void getValues() {
-        assertEquals("[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)", jobSummary.getValue(JobSummary.Key.NAME));
-        assertEquals("job_1478805790803_8364", jobSummary.getValue(JobSummary.Key.ID));
-        assertEquals("root.default", jobSummary.getValue(JobSummary.Key.QUEUE));
-        assertEquals("apm4all", jobSummary.getValue(JobSummary.Key.USER));
-        assertEquals("SUCCEEDED", jobSummary.getValue(JobSummary.Key.STATE));
+        assertEquals("[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)", jobSummary.getName());
+        assertEquals("job_1478805790803_8364", jobSummary.getId());
+        assertEquals("root.default", jobSummary.getQueue());
+        assertEquals("apm4all", jobSummary.getUser());
+        assertEquals("SUCCEEDED", jobSummary.getState());
     }
 }

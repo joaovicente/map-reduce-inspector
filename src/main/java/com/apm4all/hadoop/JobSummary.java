@@ -32,8 +32,24 @@ public class JobSummary {
         return jobSummaryJsonNode.toString();
     }
 
-    public String getValue(Key key)    {
-        return jobSummaryJsonNode.path(key.toString()).textValue();
+    public String getId() {
+        return jobSummaryJsonNode.path(Key.ID.toString()).textValue();
+    }
+
+    public String getName() {
+        return jobSummaryJsonNode.path(Key.NAME.toString()).textValue();
+    }
+
+    public String getQueue()  {
+        return jobSummaryJsonNode.path(Key.QUEUE.toString()).textValue();
+    }
+
+    public String getUser()   {
+        return jobSummaryJsonNode.path(Key.USER.toString()).textValue();
+    }
+
+    public String getState()   {
+        return jobSummaryJsonNode.path(Key.STATE.toString()).textValue();
     }
 
     public enum Key {
