@@ -22,7 +22,7 @@ public class Job {
     private JobConfiguration jobConfiguration;
     private JobCounters jobCounters;
 
-    Job(String jobHistoryUrl, String jobId) {
+    public Job(String jobHistoryUrl, String jobId) {
         JobSummaryUrlReader summaryReader = new JobSummaryUrlReader(jobHistoryUrl, jobId);
         parseSummary(summaryReader.getJsonString());
         JobCountersUrlReader countersReader = new JobCountersUrlReader(jobHistoryUrl, jobId);
@@ -31,7 +31,7 @@ public class Job {
         parseConfiguration(configurationReader.getJsonString());
     }
 
-    Job()   {
+    public Job()   {
         // Only used for testing
         JobSummaryFileCollector summaryCollector = new JobSummaryFileCollector(Constants.TEST_JOB_ID);
         parseSummary(summaryCollector.getJsonString());
