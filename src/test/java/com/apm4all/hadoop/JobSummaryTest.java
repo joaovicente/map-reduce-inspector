@@ -16,18 +16,34 @@
 
 package com.apm4all.hadoop;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class JobSummaryTest {
-    @Test
-    public void parsedFromFile() throws Exception {
+    JobSummary jobSummary;
+
+    @Before
+    public void setUp() throws Exception {
         JobSummaryFileCollector collector = new JobSummaryFileCollector(Constants.TEST_JOB_ID);
         String jsonString = collector.getJsonString();
         JobSummaryParser  parser = new JobSummaryParser(jsonString);
-        JobSummary jobSummary = parser.parse();
+        jobSummary = parser.parse();
+    }
 
+    @Test
+    public void parsedFromFile() throws Exception {
         assertTrue(jobSummary.toString().length() > 0);
+    }
+
+    @Test
+    public void getValues() {
+        assertEquals("[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)", jobSummary.getValue(JobSummary.Key.NAME));
+        assertEquals("job_1478805790803_8364", jobSummary.getValue(JobSummary.Key.ID));
+        assertEquals("root.default", jobSummary.getValue(JobSummary.Key.QUEUE));
+        assertEquals("apm4all", jobSummary.getValue(JobSummary.Key.USER));
+        assertEquals("SUCCEEDED", jobSummary.getValue(JobSummary.Key.STATE));
     }
 }

@@ -31,4 +31,20 @@ public class JobSummary {
     public String toString()   {
         return jobSummaryJsonNode.toString();
     }
+
+    public String getValue(Key key)    {
+        return jobSummaryJsonNode.path(key.toString()).textValue();
+    }
+
+    public enum Key {
+        ID("id"),
+        NAME("name"),
+        QUEUE("queue"),
+        USER("user"),
+        STATE("state");
+
+        private final String customName;
+        Key(String name) { this.customName = name; }
+        @Override public String toString() {return customName;}
+    }
 }
