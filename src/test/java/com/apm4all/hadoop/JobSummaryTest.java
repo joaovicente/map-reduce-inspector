@@ -40,10 +40,29 @@ public class JobSummaryTest {
 
     @Test
     public void getValues() {
-        assertEquals("[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)", jobSummary.getName());
+        assertEquals(1480046730687L, jobSummary.getSubmitTime());
+        assertEquals(1480046735503L, jobSummary.getStartTime());
+        assertEquals(1480057717790L, jobSummary.getFinishTime());
         assertEquals("job_1478805790803_8364", jobSummary.getId());
+        assertEquals("[04C96799FAB5430C8049F9FAA2AD32BE/4384509E1D674BCFB1F1EEA857CC6059] MY_FLOW(1/5)", jobSummary.getName());
         assertEquals("root.default", jobSummary.getQueue());
         assertEquals("apm4all", jobSummary.getUser());
         assertEquals("SUCCEEDED", jobSummary.getState());
+        assertEquals(8713, jobSummary.getMapsTotal());
+        assertEquals(8713, jobSummary.getMapsCompleted());
+        assertEquals(368, jobSummary.getReducesTotal());
+        assertEquals(368, jobSummary.getReducesCompleted());
+        assertEquals(false, jobSummary.getUberized());
+        assertEquals("", jobSummary.getDiagnostics());
+        assertEquals(713761, jobSummary.getAvgMapTime());
+        assertEquals(2345178, jobSummary.getAvgReduceTime());
+        assertEquals(546189, jobSummary.getAvgShuffleTime());
+        assertEquals(7965, jobSummary.getAvgMergeTime());
+        assertEquals(0, jobSummary.getFailedReduceAttempts());
+        assertEquals(0, jobSummary.getKilledReduceAttempts());
+        assertEquals(368, jobSummary.getSuccessfulReduceAttempts());
+        assertEquals(2, jobSummary.getFailedMapAttempts());
+        assertEquals(0, jobSummary.getKilledMapAttempts());
+        assertEquals(8713, jobSummary.getSuccessfulMapAttempts());
     }
 }
