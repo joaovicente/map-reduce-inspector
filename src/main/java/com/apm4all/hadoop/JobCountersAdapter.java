@@ -54,6 +54,22 @@ public class JobCountersAdapter {
             return this;
         }
 
+        public Builder with(String group, String category, String name)   {
+
+            try {
+                rootNode
+                        .with(JobCounters.groupToStringReplaceDots(group))
+                        .with(category)
+                        .put(name, jobCounters.getCounterValue(group, category, name));
+            } catch (NoSuchElementException e) {
+                // Not all counters will be available for all jobs
+                // e.g. SHUFFLED_MAPS will not be available on jobs which do not require reducers
+                // So, if counters are not available, they will simply not being populated
+            }
+
+            return this;
+        }
+
         public Builder with(JobCounters.Group group, JobCounters.Category category, JobCounters.Name name)   {
 
             try {
