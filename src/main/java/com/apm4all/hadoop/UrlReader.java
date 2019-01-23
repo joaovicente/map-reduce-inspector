@@ -64,7 +64,15 @@ public class UrlReader {
                 errorMessage = "Hadoop job History URL NOT FOUND";
                 bufferedReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
             }
-
+            else if (httpResponseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+                errorMessage = "Internal Server Error";
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            }
+            else {
+                errorMessage = "HTTP response code: " + httpResponseCode;
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            }
+            
             while ((outputLine = bufferedReader.readLine()) != null) {
                 returnedJSON.append(outputLine);
 
